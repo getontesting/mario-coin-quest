@@ -7,7 +7,7 @@ const store = require('./store');
 
 const DATA_SOURCE = fs.readFileSync(path.join(config.root, 'js', 'data.js'), 'utf8');
 const ENGINE_SOURCE = fs.readFileSync(path.join(config.root, 'js', 'engine.js'), 'utf8');
-const STATE_KEY = 'rifty_state_v2';
+const STATE_KEY = 'mario_state_v2';
 const hosts = new Map();
 
 function makeHost(uid) {

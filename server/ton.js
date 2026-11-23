@@ -43,7 +43,7 @@ async function getChainBalances(address) {
   if (jettons.status === 'fulfilled' && config.jettonMaster) {
     const list = jettons.value?.balances || [];
     const match = list.find((x) => norm(masterOf(x)) === norm(config.jettonMaster)) ||
-      list.find((x) => /RIFT/i.test(x?.jetton_info?.symbol || x?.jetton_info?.name || ''));
+      list.find((x) => /COIN/i.test(x?.jetton_info?.symbol || x?.jetton_info?.name || ''));
     if (match) hold = units(match.balance, Number(match.jetton_info?.decimals ?? 9));
   }
   return { ton: Math.max(0, ton), hold: Math.max(0, hold), ok: account.status === 'fulfilled' };

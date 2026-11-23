@@ -108,8 +108,84 @@ function friendsScene() {
   return b;
 }
 
+/* ---- item, crate, medal, task and avatar sprites ---- */
+function mushroom() {
+  return svg(64, 64, px(8, 26, 48, 30, '#f6dfb0') + px(12, 52, 40, 8, '#d8b87a') +
+    px(4, 16, 56, 16, C.red) + px(10, 6, 44, 12, C.red) + px(18, 2, 28, 6, C.redDark) +
+    px(14, 18, 12, 10, '#fff') + px(38, 16, 12, 10, '#fff') + px(28, 8, 10, 8, '#fff') +
+    px(20, 34, 8, 6, '#e8c98f') + px(38, 36, 6, 6, '#e8c98f'));
+}
+function flower(petal = C.red, center = '#ffe98a') {
+  return svg(64, 64, px(30, 34, 6, 26, C.hillDark) + px(16, 42, 18, 8, C.hill) + px(34, 48, 16, 8, C.hill) +
+    px(22, 6, 20, 12, petal) + px(10, 14, 44, 18, petal) + px(18, 28, 28, 10, petal) +
+    px(24, 14, 16, 16, center) + px(28, 18, 8, 8, C.questionDark));
+}
+function leaf() {
+  return svg(64, 64, px(30, 40, 6, 20, C.hillDark) +
+    `<path d="M14 44 Q6 14 50 6 Q58 34 28 48 Z" fill="${C.hill}" stroke="#187a33" stroke-width="3"/>` +
+    `<path d="M20 40 Q30 26 46 12" stroke="#187a33" stroke-width="3" fill="none"/>`);
+}
+function crateTile(color, label) {
+  return svg(96, 96, px(2, 2, 92, 92, '#7a4a21') + px(6, 6, 84, 84, color) +
+    px(12, 12, 72, 72, '#fff2c4') + px(28, 26, 40, 40, color) +
+    `<text x="48" y="56" font-family="monospace" font-size="30" font-weight="bold" text-anchor="middle" fill="#fff">${label}</text>` +
+    px(8, 84, 12, 8, '#fff') + px(76, 84, 12, 8, '#fff'));
+}
+function medalIcon(color, label) {
+  return svg(96, 96,
+    `<path d="M24 8h14l10 30-14 8Z" fill="#3b82f6"/><path d="M58 8h14l-10 38-14-8Z" fill="#e52521"/>` +
+    `<rect x="12" y="34" width="72" height="54" rx="6" fill="#7a4a21"/>` +
+    `<rect x="18" y="40" width="60" height="42" rx="4" fill="${color}"/>` +
+    `<circle cx="48" cy="61" r="14" fill="#fff2c4"/>` +
+    `<text x="48" y="68" font-family="monospace" font-size="18" font-weight="bold" text-anchor="middle" fill="#5a3617">${label}</text>`);
+}
+function taskIcon(kind) {
+  const base = px(2, 2, 60, 60, '#fff3d1');
+  if (kind === 'streak') return svg(64, 64, base + star(10, 12, 0.9));
+  if (kind === 'social') return svg(64, 64, base + `<text x="32" y="44" font-size="34" text-anchor="middle">★</text>`);
+  if (kind === 'referrals') return svg(64, 64, base + cap(8, 20, 0.45) + cap(30, 26, 0.35));
+  if (kind === 'holding') return svg(64, 64, base + coin(20, 18, 1));
+  if (kind === 'operations') return svg(64, 64, base + `<text x="32" y="45" font-size="32" text-anchor="middle">⚙</text>`);
+  return svg(64, 64, base + star(12, 14, 0.85) + coin(34, 34, 0.7));
+}
+function plumberAvatar() {
+  return svg(96, 96,
+    px(0, 0, 96, 96, '#5c94fc') +
+    px(18, 26, 60, 54, '#f6c9a0') + px(12, 8, 72, 22, C.red) + px(6, 28, 84, 12, C.redDark) +
+    px(30, 12, 16, 16, '#fff') + `<text x="38" y="26" font-family="monospace" font-size="14" font-weight="bold" fill="${C.red}">M</text>` +
+    px(26, 46, 12, 8, '#2b1a0f') + px(58, 46, 12, 8, '#2b1a0f') +
+    px(24, 60, 48, 10, '#3b2a1a') + px(30, 60, 36, 5, '#3b2a1a') +
+    px(30, 78, 36, 18, C.blue));
+}
+
 const files = {
-  'mario-logo.svg': svg(128, 128, px(0, 0, 128, 128, 'transparent') + cap(16, 30, 1.6) + coin(76, 70, 1.5)),
+  'mario-logo.svg': svg(128, 128,
+    px(4, 4, 120, 120, '#2b1a0f') + px(8, 8, 112, 112, '#fff8e7') + cap(20, 18, 1.5) +
+    `<text x="64" y="96" font-family="monospace" font-size="34" font-weight="bold" text-anchor="middle" fill="#b31612">M</text>`),
+  'mario-part-chip.svg': mushroom(),
+  'mario-part-power.svg': flower(C.red),
+  'mario-part-cooler.svg': leaf(),
+  'mario-part-crystal.svg': flower('#b06be0', '#ffe98a'),
+  'mario-crate-small.svg': crateTile('#e52521', '?'),
+  'mario-crate-medium.svg': crateTile('#f6b928', '?'),
+  'mario-crate-large.svg': crateTile('#3cb54a', '?'),
+  'mario-crate-mega.svg': crateTile('#a346c9', '★'),
+  'mario-crate-cpu.svg': crateTile('#2d6cf5', 'C'),
+  'mario-crate-power.svg': crateTile('#e52521', 'P'),
+  'mario-crate-quantum.svg': crateTile('#7a3fd6', 'Q'),
+  'mario-crate-rare.svg': crateTile('#f6b928', 'R'),
+  'mario-medal-bronze.svg': medalIcon('#c9772f', 'B'),
+  'mario-medal-silver.svg': medalIcon('#b9c4d4', 'S'),
+  'mario-medal-gold.svg': medalIcon('#ffd23f', 'G'),
+  'mario-medal-platinum.svg': medalIcon('#7ee0d8', 'P'),
+  'mario-medal-legendary.svg': medalIcon('#ef5da8', 'L'),
+  'mario-task-achievement.svg': taskIcon('achievement'),
+  'mario-task-holding.svg': taskIcon('holding'),
+  'mario-task-operations.svg': taskIcon('operations'),
+  'mario-task-referrals.svg': taskIcon('referrals'),
+  'mario-task-social.svg': taskIcon('social'),
+  'mario-task-streak.svg': taskIcon('streak'),
+  'mario-profile-avatar.svg': plumberAvatar(),
   'mario-home.svg': skyScene(),
   'mario-mining.svg': cave(),
   'mario-station.svg': factory(),

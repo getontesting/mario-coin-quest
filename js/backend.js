@@ -1,15 +1,15 @@
-/* Rifty backend adapter: real Telegram auth, server-side state, real TON Connect wallet. */
+/* Mario Bros backend adapter: real Telegram auth, server-side state, real TON Connect wallet. */
 (function (global) {
   'use strict';
   const E = global.ENGINE;
-  const TOKEN_KEY = 'rifty_session_token';
+  const TOKEN_KEY = 'mario_session_token';
   let token = sessionStorage.getItem(TOKEN_KEY) || '';
   let ready = false, remote = false, user = null, state = null, config = {}, isAdmin = false;
   let ton = null, connecting = false;
 
   async function api(path, body, method = 'POST') {
     const headers = { 'Content-Type': 'application/json' };
-    if (token) headers['X-Rifty-Token'] = token;
+    if (token) headers['X-Mario-Token'] = token;
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 10000);
     let res;
@@ -81,14 +81,14 @@
       ton = new SDK.TonConnectUI({
         manifestUrl: location.origin + '/tonconnect-manifest.json',
         actionsConfiguration: {
-          twaReturnUrl: 'https://t.me/' + (config.bot || 'riftycoinbot') + '?startapp=app',
+          twaReturnUrl: 'https://t.me/' + (config.bot || 'mariocoinbot') + '?startapp=app',
           returnStrategy: 'back'
         },
         uiPreferences: { theme: 'DARK' }
       });
       ton.onStatusChange((wallet) => {
         if (!wallet?.account?.address) return;
-        global.dispatchEvent(new CustomEvent('rifty:wallet', { detail: wallet }));
+        global.dispatchEvent(new CustomEvent('mario:wallet', { detail: wallet }));
       });
       await Promise.race([
         ton.connectionRestored ? ton.connectionRestored.catch(() => null) : Promise.resolve(null),

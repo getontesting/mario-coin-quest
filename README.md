@@ -1,6 +1,6 @@
 # Mario Bros: Coin Quest — Telegram Mini App (dengan backend nyata)
 
-Replika **Rifty Mining** (`https://rifty.run.place/`) yang sudah di-rebrand ke tema **Mario Bros 8-bit**
+Mini app **Mario Bros: Coin Quest** dengan tema **Mario Bros 8-bit**
 (sebutan: **Mario Bros: Coin Quest**, token **COIN**). Sekarang memakai
 **backend Node asli**: akun Telegram diverifikasi secara kriptografis, state disimpan di server,
 dompet TON tersambung lewat **TON Connect**, saldo on-chain dibaca dari **TonAPI**, dan hak admin
@@ -11,18 +11,18 @@ dicek server-side berdasarkan ID Telegram.
 | Aspek | Implementasi |
 |---|---|
 | **Akun Telegram** | `initData` diverifikasi dengan HMAC-SHA256 memakai **bot token** dari BotFather (secret key `HMAC("WebAppData", token)`), plus pengecekan `auth_date` (maks. 24 jam). Data palsu/tampered ditolak. |
-| **Sesi & keamanan** | Token sesi bertanda tangan HMAC disimpan di `sessionStorage`, dikirim lewat header `X-Rifty-Token`. Tidak bergantung pada cookie pihak ketiga di WebView Telegram. |
+| **Sesi & keamanan** | Token sesi bertanda tangan HMAC disimpan di `sessionStorage`, dikirim lewat header `X-Mario-Token`. Tidak bergantung pada cookie pihak ketiga di WebView Telegram. |
 | **State pengguna** | Disimpan server-side di `data/users/<telegram-id>.json`, bukan lagi di `localStorage` browser. Semua aksi game dijalankan **di server** memakai engine yang sama dengan frontend. |
 | **Dompet TON** | TON Connect UI (SDK resmi) — QR/deeplink, Wallet V5/Telegram Wallet, restore sesi, `sendTransaction`. Alamat dompet berasal dari wallet sungguhan. |
-| **Saldo on-chain** | `GET /v2/accounts/{address}` (TON) dan `/v2/accounts/{address}/jettons` (RIFT jetton) melalui TonAPI. Level dihitung dari saldo RIFT on-chain yang sebenarnya. |
+| **Saldo on-chain** | `GET /v2/accounts/{address}` (TON) dan `/v2/accounts/{address}/jettons` (COIN jetton) melalui TonAPI. Level dihitung dari saldo COIN on-chain yang sebenarnya. |
 | **Verifikasi dompet** | Kirim **0,05 TON sungguhan** ke treasury; backend mencocokkan pengirim + jumlah + waktu lewat TonAPI, lalu menandai alamat terverifikasi. |
-| **Deposit RIFT** | Transfer jetton sungguhan ke treasury dengan jumlah unik (delta dari challenge); backend mencocokkan di riwayat on-chain lalu mengkredit saldo aplikasi. |
+| **Deposit COIN** | Transfer jetton sungguhan ke treasury dengan jumlah unik (delta dari challenge); backend mencocokkan di riwayat on-chain lalu mengkredit saldo aplikasi. |
 | **Admin** | Daftar ID Telegram di `RIFTY_ADMIN_IDS`. Endpoint admin ditolak (403) untuk non-admin. Aksi admin dijalankan pada **state pengguna yang bersangkutan**, bukan state admin. Penarikan bisa ditandai lunas hanya dengan **TX hash yang diverifikasi di chain**. |
 | **User** | Setiap Telegram ID punya akun, saldo, dan riwayat sendiri di server. Tidak bisa saling mengakses. |
 
 ## Tema Mario Bros & interaksi
 
-- Identitas aplikasi sekarang **Mario Bros: Coin Quest**; token tampilan bernama **COIN** (internal tetap `RIFT` agar kompatibel dengan engine/API).
+- Identitas aplikasi sekarang **Mario Bros: Coin Quest**; token tampilan bernama **COIN** (internal tetap `COIN` agar kompatibel dengan engine/API).
 - Tema 8-bit: langit biru,awan piksel,bukit hijau,pipa,bata,bintang,dan koin. Aset SVG dibuat oleh `scripts/gen-mario-assets.js` (jalankan `node scripts/gen-mario-assets.js` untuk regenerate).
 - Font monospace chunky, panel kream berborder cokelat dengan bayangan keras, tombol merah "blocky", progress bar koin beranimasi, dan strip koin di header.
 - Interaksi baru: onboarding pertama kali, animasi **+COIN** saat klaim, notifikasi **LEVEL UP**, tombol **Klaim semua hadiah siap** di Tasks, serta modal input dalam aplikasi (bukan `prompt()` browser) untuk deposit/alamat dompet.
@@ -77,7 +77,7 @@ RIFTY_PUBLIC_URL=https://domain-anda.com
 RIFTY_SESSION_SECRET=random-panjang-rahasia
 RIFTY_DEMO_MODE=false
 RIFTY_TONAPI_KEY=...
-RIFTY_JETTON_MASTER=EQ...        # alamat master jetton RIFT
+RIFTY_JETTON_MASTER=EQ...        # alamat master jetton COIN
 RIFTY_TREASURY=UQ...             # alamat kas untuk verifikasi & deposit
 PORT=8080
 ```
@@ -96,13 +96,13 @@ PORT=8080
 ## Alur dompet (yang terjadi sebenarnya)
 
 1. Tekan **Connect wallet** → TON Connect menampilkan pilihan wallet (QR/deeplink/Telegram Wallet).
-2. Setelah disetujui, alamat dikirim ke `/api/wallet/connect`; server mengambil saldo TON + RIFT
+2. Setelah disetujui, alamat dikirim ke `/api/wallet/connect`; server mengambil saldo TON + COIN
    dari TonAPI dan menyimpannya.
 3. **Verify wallet** → dompet mengirim 0,05 TON ke `RIFTY_TREASURY`; backend memindai transaksi
    masuk ke treasury dan mencocokkan pengirim + jumlah + waktu (maks. 10 menit).
-4. **Deposit** → jetton RIFT dikirim ke treasury dengan jumlah unik; backend mencocokkan transfer
+4. **Deposit** → jetton COIN dikirim ke treasury dengan jumlah unik; backend mencocokkan transfer
    di event TonAPI lalu mengkredit saldo aplikasi.
-5. **Withdraw** dibuat di server. Admin menyetujui, lalu memasukkan TX hash transfer RIFT dari
+5. **Withdraw** dibuat di server. Admin menyetujui, lalu memasukkan TX hash transfer COIN dari
    treasury; server mengecek hash tersebut lewat TonAPI sebelum menandai penarikan lunas.
 
 ## Akses admin
@@ -116,7 +116,7 @@ PORT=8080
 ## Reset data
 
 Hapus file `data/users/<id>.json` untuk satu pengguna, atau seluruh folder `data/users` untuk
-menghapus semua akun. Token sesi di browser bisa dihapus melalui `sessionStorage.removeItem('rifty_session_token')`.
+menghapus semua akun. Token sesi di browser bisa dihapus melalui `sessionStorage.removeItem('mario_session_token')`.
 
 ## Catatan produksi
 

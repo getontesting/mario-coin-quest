@@ -1,4 +1,4 @@
-/* Rifty Mining - static game configuration (mirrors the reference app constants) */
+/* Mario Bros: Coin Quest - static game configuration (mirrors the reference app constants) */
 (function (global) {
   'use strict';
 
@@ -16,22 +16,23 @@
   };
   const media = {
     logo: 'assets/mario-logo.svg',
-    chip: 'assets/chip.webp', cooler: 'assets/cooler.webp', crystal: 'assets/crystal.webp', power: 'assets/power.webp',
-    'crate-basic': 'assets/crate-basic.webp', 'crate-cpu': 'assets/crate-cpu.webp',
-    'crate-epic': 'assets/crate-epic.webp', 'crate-large': 'assets/crate-large.webp',
-    'crate-power': 'assets/crate-power.webp', 'crate-quantum': 'assets/crate-quantum.webp',
-    'crate-rare': 'assets/crate-rare.webp',
-    'medal-bronze': 'assets/medal-bronze.webp', 'medal-gold': 'assets/medal-gold.webp',
-    'medal-legendary': 'assets/medal-legendary.webp', 'medal-platinum': 'assets/medal-platinum.webp',
-    'medal-silver': 'assets/medal-silver.webp',
-    'task-achievement': 'assets/task-achievement.webp', 'task-holding': 'assets/task-holding.webp',
-    'task-operations': 'assets/task-operations.webp', 'task-referrals': 'assets/task-referrals.webp',
-    'task-social': 'assets/task-social.webp', 'task-streak': 'assets/task-streak.webp',
-    'profile-avatar': 'assets/profile-avatar.webp',
+    chip: 'assets/mario-part-chip.svg', power: 'assets/mario-part-power.svg',
+    cooler: 'assets/mario-part-cooler.svg', crystal: 'assets/mario-part-crystal.svg',
+    'crate-basic': 'assets/mario-crate-small.svg', 'crate-medium': 'assets/mario-crate-medium.svg',
+    'crate-large': 'assets/mario-crate-large.svg', 'crate-epic': 'assets/mario-crate-mega.svg',
+    'crate-cpu': 'assets/mario-crate-cpu.svg', 'crate-power': 'assets/mario-crate-power.svg',
+    'crate-quantum': 'assets/mario-crate-quantum.svg', 'crate-rare': 'assets/mario-crate-rare.svg',
+    'medal-bronze': 'assets/mario-medal-bronze.svg', 'medal-silver': 'assets/mario-medal-silver.svg',
+    'medal-gold': 'assets/mario-medal-gold.svg', 'medal-platinum': 'assets/mario-medal-platinum.svg',
+    'medal-legendary': 'assets/mario-medal-legendary.svg',
+    'task-achievement': 'assets/mario-task-achievement.svg', 'task-holding': 'assets/mario-task-holding.svg',
+    'task-operations': 'assets/mario-task-operations.svg', 'task-referrals': 'assets/mario-task-referrals.svg',
+    'task-social': 'assets/mario-task-social.svg', 'task-streak': 'assets/mario-task-streak.svg',
+    'profile-avatar': 'assets/mario-profile-avatar.svg',
     ...Object.fromEntries(Object.entries(HERO).map(([k, v]) => [k, 'assets/' + v]))
   };
 
-  const assetUrl = (name) => media[name] || 'assets/' + name + '.webp';
+  const assetUrl = (name) => media[name] || 'assets/mario-' + name + '.svg';
 
   const leagues = [
     { key: 'bronze', from: 1, to: 100 },
@@ -41,7 +42,7 @@
     { key: 'legendary', from: 401, to: 500 }
   ];
 
-  // 500 levels. Level 2 requires 116 RIFT on-chain; each level asks ~16% more.
+  // 500 levels. Level 2 requires 116 COIN on-chain; each level asks ~16% more.
   const levelHold = (level) => (level <= 1 ? 0 : Math.round(116 * Math.pow(1.16, level - 2)));
   const levelDaily = (level) => Math.round(600 * Math.pow(1.045, level - 1));
   const levels = Array.from({ length: 500 }, (_, i) => {
@@ -61,7 +62,7 @@
     { key: 'energy', from: 21, to: 40, tier: 1, perSlot: 2 },
     { key: 'cooling', from: 41, to: 60, tier: 2, perSlot: 3 },
     { key: 'quantum', from: 61, to: 80, tier: 3, perSlot: 4 },
-    { key: 'rift', from: 81, to: 100, tier: 4, perSlot: 5 }
+    { key: 'mario', from: 81, to: 100, tier: 4, perSlot: 5 }
   ];
 
   const floorIncome = (floor, tier) => Math.round((12 + floor * 3) * Math.pow(1.6, tier));
@@ -81,7 +82,7 @@
 
   const crates = {
     small: { key: 'small', name: 'small', badge: 'STARTER', image: 'crate-basic', price: 500, count: 1, limit: 50, guaranteed: 0, filter: 'standard', desc: 'crateDesc_small', odds: [82, 15, 3, 0, 0] },
-    medium: { key: 'medium', name: 'medium', badge: 'BALANCED', image: 'crate-basic', price: 1500, count: 2, limit: 30, guaranteed: 0, filter: 'standard', desc: 'crateDesc_medium', odds: [55, 30, 12, 3, 0] },
+    medium: { key: 'medium', name: 'medium', badge: 'BALANCED', image: 'crate-medium', price: 1500, count: 2, limit: 30, guaranteed: 0, filter: 'standard', desc: 'crateDesc_medium', odds: [55, 30, 12, 3, 0] },
     big: { key: 'big', name: 'big', badge: 'ADVANCED', image: 'crate-large', price: 4500, count: 7, limit: 15, guaranteed: 0, filter: 'standard', desc: 'crateDesc_big', odds: [35, 32, 22, 9, 2] },
     mega: { key: 'mega', name: 'mega', badge: 'PREMIUM', image: 'crate-epic', price: 14000, count: 10, limit: 6, guaranteed: 3, filter: 'standard', desc: 'crateDesc_mega', odds: [10, 22, 35, 24, 9] },
     cpu_pack: { key: 'cpu_pack', name: 'cpu_pack', badge: 'CPU', image: 'crate-cpu', price: 3200, count: 3, limit: 8, guaranteed: 0, onlyType: 1, filter: 'special', desc: 'crateDesc_cpu_pack', odds: [50, 30, 15, 4, 1] },
@@ -100,7 +101,7 @@
     { id: 'mining_daily', cat: 'daily', title: 'task_mining_daily', desc: 'missionDesc_mining_daily', icon: 'task-operations', reward: 1500, cooldown: 24, kind: 'auto' },
     { id: 'workshop_daily', cat: 'daily', title: 'task_workshop_daily', desc: 'missionDesc_workshop_daily', icon: 'task-achievement', reward: 1500, cooldown: 24, kind: 'auto' },
     { id: 'telegram_daily', cat: 'daily', title: 'task_telegram_daily', desc: 'missionTelegramDesc', icon: 'task-social', reward: 1200, cooldown: 24, kind: 'telegram' },
-    { id: 'x_post', cat: 'social', title: 'task_x_post', desc: 'missionTelegramDesc', icon: 'task-social', reward: 2500, cooldown: 72, kind: 'declared', url: 'https://x.com/intent/tweet?text=Rifty%20Mining' },
+    { id: 'x_post', cat: 'social', title: 'task_x_post', desc: 'missionTelegramDesc', icon: 'task-social', reward: 2500, cooldown: 72, kind: 'declared', url: 'https://x.com/intent/tweet?text=Mario Bros%20Mining' },
     { id: 'x_follow', cat: 'social', title: 'task_x_follow', desc: 'missionTelegramDesc', icon: 'task-social', reward: 2000, cooldown: 168, kind: 'declared', url: 'https://x.com/' },
     { id: 'community_react', cat: 'social', title: 'task_community_react', desc: 'missionTelegramDesc', icon: 'task-social', reward: 1200, cooldown: 168, kind: 'declared', url: 'https://t.me/' },
     { id: 'channel', cat: 'social', title: 'task_channel', desc: 'missionTelegramDesc', icon: 'task-social', reward: 3000, cooldown: 0, kind: 'telegram', once: true },
@@ -122,7 +123,7 @@
     { name: 'platinum', percent: 25, refs: 100, subs: 2000 }
   ];
 
-  const botName = 'riftycoinbot';
+  const botName = 'mariocoinbot';
   const inviteLink = (userId) => `https://t.me/${botName}?startapp=ref_${encodeURIComponent(userId)}`;
 
   global.DATA = {
@@ -130,7 +131,7 @@
     tiers, tierClasses, partNames, partImages, classLabel, sectors,
     floorIncome, upgradeQuote, crates, stakingPlans, missions, ambassadorTiers,
     botName, inviteLink,
-    baseDaily: 600, // 25 RIFT/hour at level 1
+    baseDaily: 600, // 25 COIN/hour at level 1
     miningPauseHours: 12,
     boostMultiplier: 1.5,
     boostHours: 1,

@@ -1,4 +1,4 @@
-/* Rifty Mining - view layer */
+/* Mario Bros: Coin Quest - view layer */
 (function (global) {
   'use strict';
   const D = global.DATA, E = global.ENGINE, T = global.I18N;
@@ -71,7 +71,7 @@
   const medal = (league, size = 44) => `<img src="${asset('medal-' + league)}" alt="" width="${size}" height="${size}" loading="lazy">`;
   const partImg = (type) => `<img src="${asset(D.partImages[type])}" alt="" loading="lazy">`;
   const shortAddr = (a) => (a ? a.slice(0, 6) + '…' + a.slice(-4) : '—');
-  const amountInput = (id, value, currency = 'RIFT', max = true, min = 0) => `<div class="amount-input"><input id="${id}" type="number" inputmode="decimal" min="${min}" step="any" value="${esc(value)}">${max ? `<button data-action="max:${id}">MAX</button>` : ''}<b class="purple">${currency}</b></div>`;
+  const amountInput = (id, value, currency = 'COIN', max = true, min = 0) => `<div class="amount-input"><input id="${id}" type="number" inputmode="decimal" min="${min}" step="any" value="${esc(value)}">${max ? `<button data-action="max:${id}">MAX</button>` : ''}<b class="purple">${currency}</b></div>`;
   const sectionTitle = (label, extra = '') => `<div class="section-title"><h2>${I('spark')}${t(label)}</h2>${extra}</div>`;
 
   function header(route) {
@@ -80,7 +80,7 @@
     const flag = { en: 'gb', uk: 'ua', ar: 'sa' }[T.lang] || T.lang;
     return `<div class="device-status"><span>9:41</span><div class="row" style="gap:6px">${I('spark')}</div></div>
       <div class="coin-strip" aria-hidden="true"><i>¥</i><i>¥</i><i>¥</i><i>¥</i><i>¥</i></div>
-      <header class="topbar"><button class="brand" data-action="nav:home"><img src="${asset('logo')}" alt=""><b>Rifty</b></button>
+      <header class="topbar"><button class="brand" data-action="nav:home"><img src="${asset('logo')}" alt=""><b>Mario Bros</b></button>
       <div class="top-controls">
         <button class="top-control" data-action="language">${T.lang.toUpperCase()} <span class="chevron">⌄</span></button>
         <button class="top-control bell" data-action="notifications" aria-label="${t('notifications')}">${I('bell')}${unread ? '<span class="notification-dot"></span>' : ''}</button>
@@ -110,28 +110,28 @@
     const v = miningView(), s = S();
     const time = [Math.floor(v.remaining / 3600), Math.floor(v.remaining / 60) % 60, v.remaining % 60].map((x) => String(x).padStart(2, '0')).join(':');
     return `<section class="panel glow art-card hero-mining" ${artStyle('mining')}><div class="row">${B('box', 'cyanbox')}<div><h2>${t('mining')}</h2><p class="${v.paused ? 'gold' : 'green'} small bold"><span class="running-dot"></span>${t(v.paused ? 'miningPaused' : 'running')}</p></div><span class="boost-pill">ϟ ×${n(s.mining.multiplier, 2)}</span></div>
-      <div class="mining-number mono" id="live-mining">+${n(v.pending, 4)} <small>RIFT</small></div>
+      <div class="mining-number mono" id="live-mining">+${n(v.pending, 4)} <small>COIN</small></div>
       <p class="claim-meta">${I('clock')}<span id="mining-note">${v.paused ? t('miningClaimToResume') : t('miningPausesIn', { time })}</span></p>
       ${btn(t('claimRift'), 'claim-mining', { icon: 'bolt', disabled: v.pending < 1, extraClass: 'wide' })}</section>`;
   }
   function balanceCard() {
-    return `<div class="panel balance-card link-card" data-action="nav:wallet" role="button" tabindex="0">${B('coins')}<div><p class="muted small">${t('appBalance')}</p><div class="amount mono">${n(S().mining.balance, 4)} <span class="unit">RIFT</span></div></div>${I('chevron')}</div>`;
+    return `<div class="panel balance-card link-card" data-action="nav:wallet" role="button" tabindex="0">${B('coins')}<div><p class="muted small">${t('appBalance')}</p><div class="amount mono">${n(S().mining.balance, 4)} <span class="unit">COIN</span></div></div>${I('chevron')}</div>`;
   }
   function levelCard() {
     const s = S(), next = s.mining.next;
-    return `<div class="panel level-card link-card" data-action="nav:leagues" role="button" tabindex="0">${medal(s.mining.league)}<div class="spacer"><div class="between"><span class="small bold">${next ? t('nextLevel') + ': ' + next.level : t('maxRank')}</span><span class="muted small">${n(s.wallet.hold, 0)} / ${n(next?.hold || s.wallet.hold, 0)} RIFT</span></div>${progress(s.wallet.hold, next?.hold || s.wallet.hold || 1)}<p class="muted tiny">${next ? t('holdNext', { amount: n(next.hold, 0), level: next.level }) : t('walletOnly')}</p></div>${I('chevron', 'small')}</div>`;
+    return `<div class="panel level-card link-card" data-action="nav:leagues" role="button" tabindex="0">${medal(s.mining.league)}<div class="spacer"><div class="between"><span class="small bold">${next ? t('nextLevel') + ': ' + next.level : t('maxRank')}</span><span class="muted small">${n(s.wallet.hold, 0)} / ${n(next?.hold || s.wallet.hold, 0)} COIN</span></div>${progress(s.wallet.hold, next?.hold || s.wallet.hold || 1)}<p class="muted tiny">${next ? t('holdNext', { amount: n(next.hold, 0), level: next.level }) : t('walletOnly')}</p></div>${I('chevron', 'small')}</div>`;
   }
   function taskHomeCard() {
     const s = S(), st = s.tasks.streak;
     const ready = now() - st.last >= 86400000 && st.day < D.streakDays;
     const reward = Math.round(300 + (st.day + 1) * 120);
-    return `<section class="panel art-card" ${artStyle('tasks')}><div class="row">${B('gift', 'goldbox')}<div class="spacer"><h2>${t('missionCenter')}</h2><p class="muted small">${t('missionHomeSub')}</p></div></div><div class="between" style="margin:10px 0"><span class="small">${t('dailyStreak')} · ${t('day')} ${st.day}/30</span><b class="gold">+${n(reward, 0)} RIFT</b></div>${progress(st.day, 30, 'gold')}<div class="two-cols" style="margin-top:10px">${btn(ready ? t('claimReward') : t('claimed'), 'claim-streak', { cls: ready ? 'primary' : 'secondary', disabled: !ready, icon: 'gift' })}${navBtn('tasks', 'allTasks', 'arrow')}</div></section>`;
+    return `<section class="panel art-card" ${artStyle('tasks')}><div class="row">${B('gift', 'goldbox')}<div class="spacer"><h2>${t('missionCenter')}</h2><p class="muted small">${t('missionHomeSub')}</p></div></div><div class="between" style="margin:10px 0"><span class="small">${t('dailyStreak')} · ${t('day')} ${st.day}/30</span><b class="gold">+${n(reward, 0)} COIN</b></div>${progress(st.day, 30, 'gold')}<div class="two-cols" style="margin-top:10px">${btn(ready ? t('claimReward') : t('claimed'), 'claim-streak', { cls: ready ? 'primary' : 'secondary', disabled: !ready, icon: 'gift' })}${navBtn('tasks', 'allTasks', 'arrow')}</div></section>`;
   }
   function home() {
     return `${hero('app', 'official', 'home')}<div class="small muted" style="margin:0 9px 10px">${t('tagline')}</div>${balanceCard()}${miningHero()}
       ${stats([
-        ['hourly', `<span id="rate-hourly">${n(miningView().dailyRate / 24, 1)}</span>`, 'RIFT/h', 'bolt', 'cyan'],
-        ['daily', `<span id="rate-daily">${n(miningView().dailyRate, 0)}</span>`, 'RIFT/day', 'calendar', 'green'],
+        ['hourly', `<span id="rate-hourly">${n(miningView().dailyRate / 24, 1)}</span>`, 'COIN/h', 'bolt', 'cyan'],
+        ['daily', `<span id="rate-daily">${n(miningView().dailyRate, 0)}</span>`, 'COIN/day', 'calendar', 'green'],
         ['boost', '×' + n(S().mining.multiplier, 2), t('multiplier'), 'chart', 'gold'],
         ['league', t(S().mining.league), 'Lv.' + S().mining.level, 'shield', 'gold']
       ])}${levelCard()}${taskHomeCard()}
@@ -142,10 +142,10 @@
   function mining() {
     const v = miningView();
     return `${hero('miningTitle', 'miningSub', 'mining')}${miningHero()}
-      ${stats([['baseRate', n(S().mining.baseDaily / 24, 1), 'RIFT/h', 'bolt', 'cyan'],
+      ${stats([['baseRate', n(S().mining.baseDaily / 24, 1), 'COIN/h', 'bolt', 'cyan'],
         ['boost', '×' + n(S().mining.multiplier * (v.boosted ? D.boostMultiplier : 1), 2), t('multiplier'), 'chart', 'gold'],
-        ['totalRate', `<span id="rate-hourly">${n(v.dailyRate / 24, 1)}</span>`, 'RIFT/h', 'mining', 'green']], true)}
-      <div class="panel cyan-border"><div class="row">${B('chart', 'cyanbox')}<div><h2>${t('production')}</h2><p class="bold"><span id="rate-daily">${n(v.dailyRate, 0)}</span> RIFT / ${t('dayUnit')}</p></div></div>${chart(true)}<div class="between muted small"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div></div>
+        ['totalRate', `<span id="rate-hourly">${n(v.dailyRate / 24, 1)}</span>`, 'COIN/h', 'mining', 'green']], true)}
+      <div class="panel cyan-border"><div class="row">${B('chart', 'cyanbox')}<div><h2>${t('production')}</h2><p class="bold"><span id="rate-daily">${n(v.dailyRate, 0)}</span> COIN / ${t('dayUnit')}</p></div></div>${chart(true)}<div class="between muted small"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div></div>
       ${levelCard()}<div class="inline-note">${I('info')}${t('walletOnly')}</div><div class="two-cols">${navBtn('station', 'stationTitle', 'station')}${navBtn('staking', 'staking', 'layers')}</div>`;
   }
 
@@ -153,7 +153,7 @@
   function towerHero() {
     const s = S();
     return `<section class="panel glow art-card tower-hero" ${artStyle('station')}><div class="row">${B('station', 'cyanbox')}<h2>${t('stationOutput')}</h2><span class="spacer"></span><span class="muted small">${s.tower.floors.filter((f) => f.active).length} / 100</span></div>
-      <div class="tower-main mono">${n(s.tower.rate, 1)} <small>RIFT/h</small></div><div class="two-cols"><div class="subpanel"><p class="muted small">${t('activeFloors')}</p><strong>${s.tower.floors.filter((f) => f.active).length} / 100</strong></div><div class="subpanel"><p class="muted small">${t('unclaimed')}</p><strong class="cyan mono" id="tower-pending">${n(s.tower.pending, 4)} RIFT</strong></div></div>
+      <div class="tower-main mono">${n(s.tower.rate, 1)} <small>COIN/h</small></div><div class="two-cols"><div class="subpanel"><p class="muted small">${t('activeFloors')}</p><strong>${s.tower.floors.filter((f) => f.active).length} / 100</strong></div><div class="subpanel"><p class="muted small">${t('unclaimed')}</p><strong class="cyan mono" id="tower-pending">${n(s.tower.pending, 4)} COIN</strong></div></div>
       ${btn(t('collect'), 'claim-tower', { cls: 'secondary', icon: 'coins', disabled: s.tower.pending < 0.0001, extraClass: 'wide', extra: 'style="margin-top:9px"' })}</section>`;
   }
   function floorCard(f) {
@@ -161,7 +161,7 @@
     const stocks = [1, 2, 3, 4].map((tp) => ({ type: tp, have: E.partCount(tp, f.tier) }));
     const complete = f.slots.every((x) => x >= f.perSlot);
     return `<section class="panel floor-card ${f.locked ? 'disabled' : ''}"><div class="between"><div class="row"><span class="floor-number">#${f.floor}</span><div><h3>${t('floor')} #${f.floor}</h3><small class="muted">${t(D.tierClasses[f.tier] ? 'moduleClass' + (f.tier + 1) : 'common')} · ${t(D.tiers[f.tier])}</small></div></div>
-      <div style="text-align:right"><strong class="green small">+${n(f.income, 0)} RIFT/h</strong><br><small class="${f.active ? 'green' : f.locked ? 'muted' : 'gold'}">${f.active ? '● ' + t('active') + ' · ' + f.rank + '★' : f.locked ? '▣ ' + t('locked') : '○ ' + t('assembling')}</small></div></div>
+      <div style="text-align:right"><strong class="green small">+${n(f.income, 0)} COIN/h</strong><br><small class="${f.active ? 'green' : f.locked ? 'muted' : 'gold'}">${f.active ? '● ' + t('active') + ' · ' + f.rank + '★' : f.locked ? '▣ ' + t('locked') : '○ ' + t('assembling')}</small></div></div>
       <div class="slots">${[1, 2, 3, 4].map((tp) => `<button class="slot ${f.slots[tp - 1] >= f.perSlot ? 'complete' : ''}" data-action="install:${f.floor}:${tp}" ${f.locked || f.slots[tp - 1] >= f.perSlot || stocks[tp - 1].have < 1 ? 'disabled' : ''} aria-label="${t('install')} ${t(D.partNames[tp])}">${partImg(tp)}<span class="part-count">${f.slots[tp - 1]} / ${f.perSlot}</span><small>${t(D.partNames[tp])}</small></button>`).join('')}</div>
       ${f.active && f.rank < 5 ? btn(t('upgrade') + ' · ' + (f.rank + 1) + '★', 'upgrade:' + f.floor, { cls: 'secondary', icon: 'bolt', extraClass: 'wide', extra: 'style="margin-top:10px"' }) : ''}</section>`;
   }
@@ -181,7 +181,7 @@
   function crateTile(c) {
     const ui = global.APP.ui;
     const used = S().ledger.filter((x) => x.kind === 'crate_purchase' && x.metaKind === c.key && x.created_ms > now() - 86400000).length;
-    return `<div class="crate-tile ${ui.crateKey === c.key ? 'selected' : ''}"><span class="badge">${t(c.badge) === c.badge ? c.badge : t(c.badge)}</span><img src="${asset(c.image)}" alt="" loading="lazy"><h3>${t(c.name)}</h3><p class="muted tiny">${t(c.desc)}</p><p class="gold small">${n(c.price, 0)} RIFT · ${c.count}x</p><p class="muted tiny">${used}/${c.limit} · ${t('dailyLimit')}</p>${btn(t('crateConfirmOpen'), 'crate-details:' + c.key, { cls: 'secondary', extraClass: 'wide', extra: 'style="min-height:32px;font-size:10px"' })}</div>`;
+    return `<div class="crate-tile ${ui.crateKey === c.key ? 'selected' : ''}"><span class="badge">${t(c.badge) === c.badge ? c.badge : t(c.badge)}</span><img src="${asset(c.image)}" alt="" loading="lazy"><h3>${t(c.name)}</h3><p class="muted tiny">${t(c.desc)}</p><p class="gold small">${n(c.price, 0)} COIN · ${c.count}x</p><p class="muted tiny">${used}/${c.limit} · ${t('dailyLimit')}</p>${btn(t('crateConfirmOpen'), 'crate-details:' + c.key, { cls: 'secondary', extraClass: 'wide', extra: 'style="min-height:32px;font-size:10px"' })}</div>`;
   }
   function cratesPage(embedded = false) {
     const ui = global.APP.ui;
@@ -205,7 +205,7 @@
     return `<div class="panel art-card" ${artStyle('crafting')}><h2>${t('workshopTitle')}</h2><p class="muted small" style="margin-top:6px">${t('workshopDescription')}</p></div>
       <div class="pill-row">${[1, 2, 3, 4].map((x) => btn(t(D.partNames[x]), 'craft-type:' + x, { cls: 'pill ' + (type === x ? 'active' : '') })).join('')}</div>
       <section class="panel"><div class="row">${partImg(type)}<div class="spacer"><h3>${t(D.partNames[type])} · ${t(D.tiers[0])}</h3><p class="muted small">${t('workshopInStock')}: <b class="cyan">${have}</b> / 3</p></div></div>
-        ${progress(have, 3, 'cyan')}<div class="between small" style="margin-top:9px"><span class="muted">${t('synthesisFee')}</span><b>${n(fee, 2)} RIFT</b></div>
+        ${progress(have, 3, 'cyan')}<div class="between small" style="margin-top:9px"><span class="muted">${t('synthesisFee')}</span><b>${n(fee, 2)} COIN</b></div>
         ${btn(t('synthesize'), 'craft:' + type + ':0', { cls: have >= 3 && s.mining.balance >= fee ? 'primary' : 'secondary', disabled: have < 3 || s.mining.balance < fee, icon: 'spark', extraClass: 'wide', extra: 'style="margin-top:12px"' })}</section>
       ${sectionTitle('yourInventory')}${inventoryGrid()}`;
   }
@@ -217,7 +217,7 @@
     const vals = { level: req.level, hold: n(req.hold, 0), percent: s.friends.percent };
     const link = D.inviteLink(s.user.id);
     return `${hero('inviteEarn', 'friendsSub', 'friends')}<div class="panel art-card friends-hero" ${artStyle('friends')}><div class="percentage-row"><span class="hero-percentage">${s.friends.percent}%</span><p>${t('fromMining')}</p></div></div>
-      ${stats([['invited', s.friends.refs.length, '', 'friends', 'purple'], ['active', s.friends.refs.filter((r) => r.active).length, '', 'friends', 'green'], ['earned', n(s.friends.earned, 2), 'RIFT', 'coins', 'purple']], true)}
+      ${stats([['invited', s.friends.refs.length, '', 'friends', 'purple'], ['active', s.friends.refs.filter((r) => r.active).length, '', 'friends', 'green'], ['earned', n(s.friends.earned, 2), 'COIN', 'coins', 'purple']], true)}
       ${btn(t('commissionHistory'), 'commission-history:all', { cls: 'secondary', icon: 'history', extraClass: 'wide' })}
       <div class="panel glow art-card" ${artStyle('friends')}><h2>${t('yourLink')}</h2><div class="ref-link"><span>${esc(link)}</span><button class="btn btn-ghost text-button" data-action="copy-link" aria-label="${t('copyLink')}">${I('copy')}</button></div>
       <div class="two-cols">${btn(t('inviteFriends'), 'invite', { icon: 'send' })}${btn(t('copyLink'), 'copy-link', { cls: 'secondary', icon: 'copy' })}</div><p class="muted small" style="margin-top:10px">${t('activeRule')}</p></div>
@@ -234,19 +234,19 @@
     const names = { mining_claim: 'mining', tower_claim: 'station', crate_purchase: 'crates', synthesis: 'crafting', floor_upgrade: 'station', stake_locked: 'staking', stake_matured: 'staking', daily_reward: 'dailyReward', referral_reward: 'referralReward', withdrawal_reserved: 'withdraw', withdrawal_refund: 'withdraw', opening_balance: 'appBalance', sandbox_credit: 'localSandbox', task_reward: 'tasks', chain_deposit: 'deposit', swap_buy: 'buy', swap_sell: 'sellTab' };
     return `<section class="panel"><div class="section-title" style="margin-top:0"><h2>${t('recentActivity')}</h2><button class="btn btn-ghost text-button" data-action="export" aria-label="${t('exportHistory')}">${I('download')}</button></div>
       <div class="pill-row">${['all', 'received', 'sent'].map((k) => btn(t(k), 'activity:' + k, { cls: 'pill ' + (filter === k ? 'active' : '') })).join('')}</div>
-      ${shown.slice(0, 30).map((x) => `<div class="list-row link-card" role="button" tabindex="0" data-action="activity-detail:${x.id}">${B(x.amount < 0 ? 'upload' : 'download', x.amount < 0 ? 'purplebox' : 'greenbox')}<div><h3>${t(names[x.kind] || 'appBalance')}</h3><p class="muted small">${T.fmtDate(x.created_ms)}</p></div><div class="value"><strong class="${x.amount < 0 ? 'purple' : 'green'} small">${x.amount >= 0 ? '+' : ''}${n(x.amount, 2)} RIFT</strong><p class="muted small">${t('completed')}</p></div></div>`).join('') || empty('noActivity', 'clock')}</section>`;
+      ${shown.slice(0, 30).map((x) => `<div class="list-row link-card" role="button" tabindex="0" data-action="activity-detail:${x.id}">${B(x.amount < 0 ? 'upload' : 'download', x.amount < 0 ? 'purplebox' : 'greenbox')}<div><h3>${t(names[x.kind] || 'appBalance')}</h3><p class="muted small">${T.fmtDate(x.created_ms)}</p></div><div class="value"><strong class="${x.amount < 0 ? 'purple' : 'green'} small">${x.amount >= 0 ? '+' : ''}${n(x.amount, 2)} COIN</strong><p class="muted small">${t('completed')}</p></div></div>`).join('') || empty('noActivity', 'clock')}</section>`;
   }
   function wallet() {
     const s = S(), w = s.wallet;
     return `${hero('wallet', 'walletSub', 'wallet')}<section class="panel glow art-card wallet-balance" ${artStyle('wallet')}><div class="row small bold ${w.address ? 'green' : 'muted'}">${I('wallet')}${t('wallet') + ' · ' + t(w.address ? 'connected' : 'disconnected')}</div>
-      <p class="muted small" style="margin-top:12px">${t('onChain')}</p><div class="wallet-number mono">${n(w.hold, 4)} <small>RIFT</small></div><div class="ton-row">▽ ${n(w.ton, 4)} TON</div>
+      <p class="muted small" style="margin-top:12px">${t('onChain')}</p><div class="wallet-number mono">${n(w.hold, 4)} <small>COIN</small></div><div class="ton-row">▽ ${n(w.ton, 4)} TON</div>
       ${w.address ? `<div class="address">${I('wallet', 'small')}<span>${esc(shortAddr(w.address))}</span><button class="btn btn-ghost text-button" data-action="copy-address">${I('copy', 'small')}</button><button class="btn btn-ghost text-button" data-action="refresh-wallet">${I('refresh', 'small')}</button></div>` : btn(t('connectWallet'), 'connect', { cls: 'primary', icon: 'wallet', extraClass: 'wide', extra: 'style="margin-top:10px"' })}</section>
       ${balanceCard()}
       ${w.address ? `<div class="action-grid">${btn(t('buy'), 'nav:market', { icon: 'plus' })}${btn(t('withdraw'), 'nav:withdraw', { icon: 'upload' })}${btn(t('swap'), 'nav:market', { icon: 'swap' })}</div>` : ''}
       <div class="inline-note link-card" data-action="nav:leagues">${I('chart')}${t('walletOnly')}${I('chevron', 'small')}</div>
       ${w.address && !w.verified ? `<section class="panel cyan-border"><h3>${t('verification')}</h3><p class="muted small" style="margin:6px 0 10px">${t('verifySub')}</p>${btn(t('verifyWallet'), 'verify-wallet', { cls: 'secondary', icon: 'shield', extraClass: 'wide' })}</section>` : ''}
       <div class="two-cols" style="margin-bottom:11px">${btn(t('deposit'), 'deposit', { cls: 'secondary', icon: 'download' })}${navBtn('staking', 'staking', 'layers')}</div>
-      ${s.payments.length ? `<section class="panel"><h2>${t('paymentHistory')}</h2><p class="muted small">${t('paymentAuto')}</p>${s.payments.map((p) => `<div class="list-row">${B(p.status === 'paid' ? 'check' : 'clock', p.status === 'paid' ? 'greenbox' : 'cyanbox')}<div class="spacer"><h3>${t(p.kind === 'deposit' ? 'deposit' : 'verification')}</h3><p class="muted small">${n(p.amount, 2)} ${p.kind === 'deposit' ? 'RIFT' : 'TON'} · ${T.fmtDate(p.createdAt)}</p><small class="${p.status === 'paid' ? 'green' : 'muted'}">${t(p.status === 'paid' ? 'completed' : p.status === 'expired' ? 'paymentExpired' : 'pending')}</small></div>${p.canCheck ? btn(t('check'), 'check-payment:' + p.id, { cls: 'secondary', icon: 'refresh' }) : ''}</div>`).join('')}</section>` : ''}
+      ${s.payments.length ? `<section class="panel"><h2>${t('paymentHistory')}</h2><p class="muted small">${t('paymentAuto')}</p>${s.payments.map((p) => `<div class="list-row">${B(p.status === 'paid' ? 'check' : 'clock', p.status === 'paid' ? 'greenbox' : 'cyanbox')}<div class="spacer"><h3>${t(p.kind === 'deposit' ? 'deposit' : 'verification')}</h3><p class="muted small">${n(p.amount, 2)} ${p.kind === 'deposit' ? 'COIN' : 'TON'} · ${T.fmtDate(p.createdAt)}</p><small class="${p.status === 'paid' ? 'green' : 'muted'}">${t(p.status === 'paid' ? 'completed' : p.status === 'expired' ? 'paymentExpired' : 'pending')}</small></div>${p.canCheck ? btn(t('check'), 'check-payment:' + p.id, { cls: 'secondary', icon: 'refresh' }) : ''}</div>`).join('')}</section>` : ''}
       ${activityPage()}
       <section class="panel invite-banner art-card" ${artStyle('wallet')}>${B('shield', 'goldbox')}<div><h3>${t('youControl')}</h3><p>${t('reviewTransaction')}</p></div></section>`;
   }
@@ -256,12 +256,12 @@
     const s = S(), ui = global.APP.ui, price = D.marketPrice;
     const amount = Number(ui.tradeAmount) || 0;
     const receive = Math.max(0, amount / price * (1 - D.slippage) - D.serviceFee / price);
-    return `${hero('market', 'marketSub', 'market')}<section class="panel glow market-pair"><div class="between"><div class="row">${B('market', 'purplebox')}<b>RIFT / TON</b></div><span class="pill small">STON.fi</span></div>
-      <div class="price-number mono" style="margin-top:12px">${n(price, 7)} <small>TON</small></div><p class="muted small">${t('marketPrice')} · 1 RIFT</p>${chart(false)}</section>
+    return `${hero('market', 'marketSub', 'market')}<section class="panel glow market-pair"><div class="between"><div class="row">${B('market', 'purplebox')}<b>COIN / TON</b></div><span class="pill small">STON.fi</span></div>
+      <div class="price-number mono" style="margin-top:12px">${n(price, 7)} <small>TON</small></div><p class="muted small">${t('marketPrice')} · 1 COIN</p>${chart(false)}</section>
       <div class="tabs">${btn(t('buyTab'), 'market-tab:buy', { cls: ui.marketTab !== 'history' ? 'active' : '' })}${btn(t('marketHistoryTab'), 'market-tab:history', { cls: ui.marketTab === 'history' ? 'active' : '' })}</div>
-      ${ui.marketTab === 'history' ? `<section class="panel"><h2>${t('marketHistoryTitle')}</h2>${s.market.swaps.map((x) => `<div class="list-row">${B('market', 'greenbox')}<div class="spacer"><h3>${n(x.offer, 4)} TON</h3><p class="muted small">${T.fmtDate(x.created_ms)}</p></div><strong class="value purple small">+${n(x.receive, 0)} RIFT</strong></div>`).join('') || empty('marketHistoryEmpty', 'clock')}</section>` : `<form class="panel glow swap-form" id="trade-form"><label class="form-label" for="trade-amount">${t('youPay')}</label>${amountInput('trade-amount', ui.tradeAmount || '1', 'TON')}
+      ${ui.marketTab === 'history' ? `<section class="panel"><h2>${t('marketHistoryTitle')}</h2>${s.market.swaps.map((x) => `<div class="list-row">${B('market', 'greenbox')}<div class="spacer"><h3>${n(x.offer, 4)} TON</h3><p class="muted small">${T.fmtDate(x.created_ms)}</p></div><strong class="value purple small">+${n(x.receive, 0)} COIN</strong></div>`).join('') || empty('marketHistoryEmpty', 'clock')}</section>` : `<form class="panel glow swap-form" id="trade-form"><label class="form-label" for="trade-amount">${t('youPay')}</label>${amountInput('trade-amount', ui.tradeAmount || '1', 'TON')}
         <p class="muted small" style="margin-top:6px">${t('marketOnchainBalance')}: ${n(s.wallet.ton, 4)} TON</p><div class="market-direction">${I('swap')}</div>
-        <label class="form-label">${t('youReceive')} ≈</label><div class="amount-input"><strong id="trade-receive" class="spacer cyan mono market-estimate">${n(receive, 0)}</strong><b class="purple">RIFT</b></div>
+        <label class="form-label">${t('youReceive')} ≈</label><div class="amount-input"><strong id="trade-receive" class="spacer cyan mono market-estimate">${n(receive, 0)}</strong><b class="purple">COIN</b></div>
         <div class="subpanel" style="margin:12px 0">${summaryRow(t('serviceFee'), n(D.serviceFee, 3) + ' TON')}${summaryRow(t('slippage'), '0.5%')}${summaryRow(t('marketBeforeNetwork'), `<span id="trade-total">${n(amount + D.serviceFee, 3)} TON</span>`, true)}</div>
         <p class="muted small">${t('marketQuoteHint')}</p>${btn(t('reviewPurchase'), 'review-trade', { icon: 'market', extraClass: 'wide', extra: 'style="margin-top:12px"' })}
         ${!s.wallet.address ? btn(t('connectWallet'), 'connect', { cls: 'secondary', icon: 'wallet', extraClass: 'wide', extra: 'style="margin-top:8px"' }) : ''}</form>`}
@@ -274,16 +274,16 @@
     const s = S(), ui = global.APP.ui, plan = D.stakingPlans.find((p) => p.days === ui.plan) || D.stakingPlans[0];
     const amount = Number(document.getElementById('stake-amount')?.value) || 0;
     const reward = amount * plan.percent / 100;
-    return `${hero('stakingTitle', 'stakingSub', 'staking')}<div class="panel balance-card art-card" ${artStyle('staking')}>${B('coins')}<div><p class="muted small">${t('availableStake')}</p><div class="amount mono">${n(s.mining.balance, 4)} <span class="unit">RIFT</span></div><p class="muted small">${t('appBalance')}</p></div></div>
+    return `${hero('stakingTitle', 'stakingSub', 'staking')}<div class="panel balance-card art-card" ${artStyle('staking')}>${B('coins')}<div><p class="muted small">${t('availableStake')}</p><div class="amount mono">${n(s.mining.balance, 4)} <span class="unit">COIN</span></div><p class="muted small">${t('appBalance')}</p></div></div>
       <div class="panel glow"><h3>${t('chooseDuration')}</h3><div class="three-cols" style="margin-top:10px">${D.stakingPlans.map((p) => `<button class="plan ${ui.plan === p.days ? 'active' : ''}" data-action="plan:${p.days}">${p.days} ${t('days')}<span class="rate">+${p.percent}%</span></button>`).join('')}</div>
-      <p class="muted small" style="margin-top:8px">${t('termReward')}</p><label class="form-label" for="stake-amount">${t('stakeAmount')}</label>${amountInput('stake-amount', '1000', 'RIFT')}
-      <p class="muted small" style="margin-top:5px">${t('minStake')} · ${n(s.staking.staked, 0)} / ${n(s.staking.limit, 0)} RIFT</p>
-      <div class="subpanel" style="margin:12px 0">${summaryRow(t('estimatedReward'), `<span id="stake-reward" class="cyan">+${n(reward, 2)} RIFT</span>`)}${summaryRow(t('totalMaturity'), `<span id="stake-total">${n(amount + reward, 2)} RIFT</span>`)}${summaryRow(t('duration'), plan.days + ' ' + t('days'))}</div>
+      <p class="muted small" style="margin-top:8px">${t('termReward')}</p><label class="form-label" for="stake-amount">${t('stakeAmount')}</label>${amountInput('stake-amount', '1000', 'COIN')}
+      <p class="muted small" style="margin-top:5px">${t('minStake')} · ${n(s.staking.staked, 0)} / ${n(s.staking.limit, 0)} COIN</p>
+      <div class="subpanel" style="margin:12px 0">${summaryRow(t('estimatedReward'), `<span id="stake-reward" class="cyan">+${n(reward, 2)} COIN</span>`)}${summaryRow(t('totalMaturity'), `<span id="stake-total">${n(amount + reward, 2)} COIN</span>`)}${summaryRow(t('duration'), plan.days + ' ' + t('days'))}</div>
       ${btn(t('reviewStake'), 'review-stake', { icon: 'bolt', extraClass: 'wide' })}<p class="muted small center" style="margin-top:9px">${t('lockedUntil')}</p></div>
       ${sectionTitle('activeStakes')}${s.staking.stakes.length ? s.staking.stakes.map((st) => {
         const pct = Math.max(0, Math.min(100, ((now() - st.createdAt) / (st.endsAt - st.createdAt)) * 100));
         const matured = st.endsAt <= now() && !st.claimed;
-        return `<div class="panel"><div class="between"><div><h3>${n(st.amount, 2)} RIFT</h3><p class="muted small">${st.days} ${t('days')} · +${st.percent}%</p></div><div style="text-align:right"><small class="muted">${t('estimatedReward')}</small><p class="cyan bold">+${n(st.reward, 2)} RIFT</p></div></div>${progress(pct, 100, 'cyan')}<div class="between"><small class="muted">${st.claimed ? t('claimed') : matured ? t('matured') : t('remainingDays', { count: Math.ceil((st.endsAt - now()) / 86400000) })}</small>${matured ? btn(t('claimStake'), 'claim-stake:' + st.id, { cls: 'secondary' }) : ''}</div></div>`;
+        return `<div class="panel"><div class="between"><div><h3>${n(st.amount, 2)} COIN</h3><p class="muted small">${st.days} ${t('days')} · +${st.percent}%</p></div><div style="text-align:right"><small class="muted">${t('estimatedReward')}</small><p class="cyan bold">+${n(st.reward, 2)} COIN</p></div></div>${progress(pct, 100, 'cyan')}<div class="between"><small class="muted">${st.claimed ? t('claimed') : matured ? t('matured') : t('remainingDays', { count: Math.ceil((st.endsAt - now()) / 86400000) })}</small>${matured ? btn(t('claimStake'), 'claim-stake:' + st.id, { cls: 'secondary' }) : ''}</div></div>`;
       }).join('') : `<div class="panel">${empty('noStakes', 'layers')}</div>`}`;
   }
 
@@ -296,7 +296,7 @@
     const list = D.missions.filter((m) => cat === 'all' || m.cat === cat);
     return `${hero('tasks', 'tasksSub', 'tasks')}<section class="panel art-card" ${artStyle('task-daily')}><div class="row">${B('gift', 'goldbox')}<div><h2>${t('dailyStreak')}</h2><p class="muted small">${t('streakNotice')}</p></div></div>
       <div class="streak-days">${Array.from({ length: 10 }, (_, i) => `<div class="streak-day ${i < st.day ? 'done' : i === st.day ? 'today' : ''}"><b>${i + 1}</b><br>${t('day')}</div>`).join('')}</div>
-      <div class="between"><span class="small">${t('dailyReward')}</span><b class="gold">+${n(reward, 0)} RIFT</b></div>
+      <div class="between"><span class="small">${t('dailyReward')}</span><b class="gold">+${n(reward, 0)} COIN</b></div>
       ${btn(streakReady ? t('claimReward') : t('claimed'), 'claim-streak', { cls: streakReady ? 'primary' : 'secondary', disabled: !streakReady, icon: 'gift', extraClass: 'wide', extra: 'style="margin-top:10px"' })}</section>
       ${btn('★ ' + (T.lang === 'id' ? 'Klaim semua hadiah siap' : 'Claim all ready rewards'), 'claim-all-tasks', { cls: 'secondary', icon: 'gift', extraClass: 'wide', extra: 'style="margin-bottom:10px"' })}
       <div class="tabs">${[['all', 'allTasks'], ['daily', 'missionDaily'], ['social', 'social'], ['milestones', 'milestones'], ['holding', 'missionHolding']].map(([k, l]) => btn(t(l), 'task-tab:' + k, { cls: cat === k ? 'active' : '' })).join('')}</div>
@@ -315,7 +315,7 @@
   /* ---------- Leagues & Levels ---------- */
   function leagues() {
     const s = S();
-    return `${hero('leagues', 'leaguesSub', 'leagues')}<section class="panel art-card league-current" ${artStyle('leagues')}><div><p class="muted small">${t('yourLeague')}</p><h2>${t(s.mining.league)}</h2><p class="muted small" style="margin-top:15px">${t('walletHold')}</p><h2>${n(s.wallet.hold, 0)} RIFT</h2></div>${medal(s.mining.league, 70)}</section>
+    return `${hero('leagues', 'leaguesSub', 'leagues')}<section class="panel art-card league-current" ${artStyle('leagues')}><div><p class="muted small">${t('yourLeague')}</p><h2>${t(s.mining.league)}</h2><p class="muted small" style="margin-top:15px">${t('walletHold')}</p><h2>${n(s.wallet.hold, 0)} COIN</h2></div>${medal(s.mining.league, 70)}</section>
       ${levelCard()}${btn(t('browseLevels'), 'nav:' + levelLink(s.mining.level), { icon: 'search', extraClass: 'wide' })}
       ${sectionTitle('leagueProgression')}${D.leagues.map((l) => `<button class="panel league-row art-card link-card" data-action="nav:levels?league=${l.key}" ${artStyle('leagues')}>${medal(l.key, 52)}<span class="league-summary"><strong>${t(l.key)}</strong><span class="muted small">${t('levelRange', l)}</span><span class="cyan small">${t('viewLeagueLevels')}</span></span><span class="spacer"></span>${s.mining.league === l.key ? `<span class="pill status small">● ${t('current')}</span>` : ''}${I('chevron', 'small')}</button>`).join('')}
       <div class="inline-note">${I('info')}${t('walletOnly')}</div>`;
@@ -334,8 +334,8 @@
     return `${hero('levels', 'levelsSub', 'leagues', true)}<div class="sector-tabs">${D.leagues.map((l) => `<button class="${l.key === league.key ? 'active' : ''}" data-action="nav:levels?league=${l.key}">${medal(l.key, 40)}<strong>${t(l.key)}</strong><small>${l.from}–${l.to}</small></button>`).join('')}</div>
       <section class="panel level-browser"><div class="between"><div><h2>${t(league.key)}</h2><p class="muted small">${t('levelRange', league)}</p></div>${btn(t('yourLevel'), 'nav:' + levelLink(s.mining.level), { cls: 'secondary', icon: 'shield' })}</div>
       <form id="level-search-form" class="level-search" style="display:flex;gap:7px;margin:11px 0"><input id="level-search" type="number" min="1" max="500" inputmode="numeric" placeholder="${t('findLevel')} · 1–500" value="${params.get('level') || ''}">${btn(t('search'), 'find-level', { cls: 'secondary', icon: 'search' })}</form>
-      <div class="level-columns muted small" style="display:grid;grid-template-columns:1.2fr 1fr 1fr 20px;gap:6px;padding:0 4px 6px"><span>${t('level')}</span><span>${t('walletHold')}</span><span>RIFT / ${t('dayUnit')}</span><span></span></div>
-      <div class="level-entries">${rows.map((x) => `<button class="level-entry panel" style="display:grid;grid-template-columns:1.2fr 1fr 1fr 20px;gap:6px;align-items:center;text-align:left;margin-bottom:5px;padding:8px" data-action="level-detail:${x.level}"><span class="row">${medal(league.key, 28)}<b>${x.level}</b></span><span>${n(x.hold, 0)}<small class="muted"> RIFT</small></span><span class="cyan">${n(x.daily, 0)}<small class="muted"> /h ${n(x.daily / 24, 1)}</small></span>${I('chevron', 'small')}</button>`).join('')}</div>
+      <div class="level-columns muted small" style="display:grid;grid-template-columns:1.2fr 1fr 1fr 20px;gap:6px;padding:0 4px 6px"><span>${t('level')}</span><span>${t('walletHold')}</span><span>COIN / ${t('dayUnit')}</span><span></span></div>
+      <div class="level-entries">${rows.map((x) => `<button class="level-entry panel" style="display:grid;grid-template-columns:1.2fr 1fr 1fr 20px;gap:6px;align-items:center;text-align:left;margin-bottom:5px;padding:8px" data-action="level-detail:${x.level}"><span class="row">${medal(league.key, 28)}<b>${x.level}</b></span><span>${n(x.hold, 0)}<small class="muted"> COIN</small></span><span class="cyan">${n(x.daily, 0)}<small class="muted"> /h ${n(x.daily / 24, 1)}</small></span>${I('chevron', 'small')}</button>`).join('')}</div>
       <div class="between" style="margin-top:10px">${btn(I('back'), `nav:levels?league=${league.key}&page=${page - 1}`, { cls: 'secondary', disabled: page === 1 })}${t('levelsShown', { from: rows[0]?.level, to: rows[rows.length - 1]?.level, total: 500 })}${btn(I('arrow'), `nav:levels?league=${league.key}&page=${page + 1}`, { cls: 'secondary', disabled: page === pages })}</div></section>`;
   }
 
@@ -345,8 +345,8 @@
     const stat = (label, value, unit, image, target) => `<button class="panel profile-stat link-card" data-action="nav:${target}" style="display:flex;align-items:center;gap:10px;width:100%"><img src="${asset(image)}" alt="" width="46" height="46"><span style="flex:1"><small class="muted">${t(label)}</small><br><strong>${value}</strong><br><small class="muted">${unit}</small></span>${I('chevron', 'small')}</button>`;
     return `${hero('profile', 'profileSub', 'profile')}<section class="panel profile-identity" style="display:flex;align-items:center;gap:12px"><img class="profile-avatar" src="${s.user.photoUrl || asset('profile-avatar')}" alt="" width="72" height="72" style="border-radius:50%"><div class="spacer"><h2>${esc(s.user.name)}</h2><p class="muted small">${t('explorerId')}: ${esc(s.user.id)}</p><p class="muted small">${t('memberSince', { date: T.fmtDate(s.user.joinedAt) })}</p></div><button class="btn btn-ghost" data-action="nav:settings">${I('settings')}</button></section>
       <section class="panel glow profile-rank"><div class="row">${medal(m.league, 56)}<div class="spacer"><p class="muted small">${t('yourLevel')}</p><h2>${t('level')} ${m.level}</h2><span class="pill gold small">${t(m.league)}</span></div></div>
-      <div class="between small" style="margin-top:10px"><span>${m.next ? t('nextLevel') + ': ' + m.next.level : t('maxRank')}</span><strong class="cyan">${m.next ? n(Math.max(0, m.next.hold - s.wallet.hold), 0) + ' RIFT' : '✓'}</strong></div>${progress(s.wallet.hold, m.next?.hold || s.wallet.hold || 1, 'purple')}</section>
-      <div class="stats">${stat('appBalance', n(m.balance, 2), 'RIFT', 'crystal', 'wallet')}${stat('daily', n(m.daily, 0), 'RIFT / ' + t('dayUnit'), 'power', 'mining')}${stat('activeFloors', s.tower.floors.filter((f) => f.active).length + ' / 100', t('station'), 'chip', 'station')}${stat('yourCrew', s.friends.refs.length, t('activeFriends') + ': ' + s.friends.refs.filter((r) => r.active).length, 'profile-avatar', 'friends')}</div>
+      <div class="between small" style="margin-top:10px"><span>${m.next ? t('nextLevel') + ': ' + m.next.level : t('maxRank')}</span><strong class="cyan">${m.next ? n(Math.max(0, m.next.hold - s.wallet.hold), 0) + ' COIN' : '✓'}</strong></div>${progress(s.wallet.hold, m.next?.hold || s.wallet.hold || 1, 'purple')}</section>
+      <div class="stats">${stat('appBalance', n(m.balance, 2), 'COIN', 'crystal', 'wallet')}${stat('daily', n(m.daily, 0), 'COIN / ' + t('dayUnit'), 'power', 'mining')}${stat('activeFloors', s.tower.floors.filter((f) => f.active).length + ' / 100', t('station'), 'chip', 'station')}${stat('yourCrew', s.friends.refs.length, t('activeFriends') + ': ' + s.friends.refs.filter((r) => r.active).length, 'profile-avatar', 'friends')}</div>
       ${sectionTitle('leagueBadges', btn(t('viewAll'), 'nav:leagues', { cls: 'text-button' }))}<div class="panel badge-collection" style="display:flex;justify-content:space-around">${D.leagues.map((l) => `<button data-action="nav:levels?league=${l.key}" style="opacity:${m.level >= l.from ? 1 : .35}">${medal(l.key, 48)}</button>`).join('')}</div>
       ${sectionTitle('moduleCollection')}<div class="panel inv-grid">${[1, 2, 3, 4].map((tp) => `<div class="inv-item">${partImg(tp)}<b>×${s.tower.inventory.filter((x) => x.type === tp).reduce((a, b) => a + b.count, 0)}</b><small>${t(D.partNames[tp])}</small></div>`).join('')}</div>`;
   }
@@ -368,16 +368,16 @@
     const fee = round2(gross * D.withdrawFee), net = round2(gross - fee);
     const last = s.withdrawal.items[0];
     return `${hero('withdraw', 'withdrawSub', 'withdraw', true)}<div class="panel between"><div class="row">${B('wallet', 'cyanbox')}<div><p class="muted small">${t('connectedWallet')}</p><h3>${w.address ? shortAddr(w.address) : t('disconnected')}</h3></div></div>${w.address ? '' : btn(t('connectWallet'), 'connect', { cls: 'secondary' })}</div>
-      <section class="panel glow"><p class="muted small">${t('availableApp')}</p><div class="price-number mono">${n(s.mining.balance, 2)} <small class="purple">RIFT</small></div>
-      <label class="form-label" for="withdraw-amount">${t('amount')}</label>${amountInput('withdraw-amount', ui.withdrawAmount || '10000', 'RIFT')}<p class="muted small" style="margin-top:5px">${t('minimum')} ${n(D.withdrawMinimum, 0)} RIFT · ${t('withdrawCooldown')} 24h</p></section>
-      <div class="panel withdraw-hold"><div class="row">${B('shield', 'goldbox')}<div><p class="muted small">${t('holdRequirement')}</p><strong class="gold" id="hold-requirement">${n(required, 2)} RIFT</strong><p class="muted small">${t('withdrawHoldRule')}</p></div></div>
-      <div class="subpanel" style="margin-top:10px">${summaryRow(t('withdrawWalletHold'), n(have, 2) + ' RIFT')}${summaryRow(t('withdrawMissingHold'), n(Math.max(0, required - have), 2) + ' RIFT')}</div>
+      <section class="panel glow"><p class="muted small">${t('availableApp')}</p><div class="price-number mono">${n(s.mining.balance, 2)} <small class="purple">COIN</small></div>
+      <label class="form-label" for="withdraw-amount">${t('amount')}</label>${amountInput('withdraw-amount', ui.withdrawAmount || '10000', 'COIN')}<p class="muted small" style="margin-top:5px">${t('minimum')} ${n(D.withdrawMinimum, 0)} COIN · ${t('withdrawCooldown')} 24h</p></section>
+      <div class="panel withdraw-hold"><div class="row">${B('shield', 'goldbox')}<div><p class="muted small">${t('holdRequirement')}</p><strong class="gold" id="hold-requirement">${n(required, 2)} COIN</strong><p class="muted small">${t('withdrawHoldRule')}</p></div></div>
+      <div class="subpanel" style="margin-top:10px">${summaryRow(t('withdrawWalletHold'), n(have, 2) + ' COIN')}${summaryRow(t('withdrawMissingHold'), n(Math.max(0, required - have), 2) + ' COIN')}</div>
       <p class="${have >= required ? 'green' : 'red'} small" style="margin-top:8px">${t(have >= required ? 'requirementMet' : 'withdrawHoldMissing')}</p>
       ${w.address ? btn(t('refreshWallet'), 'refresh-wallet', { cls: 'secondary', icon: 'refresh', extraClass: 'wide', extra: 'style="margin-top:10px"' }) : ''}</div>
       ${!w.verified ? `<div class="inline-note gold">${I('info')}${t('err_wallet_verification_required')} <button class="btn btn-ghost text-button" data-action="verify-wallet">${t('verifyWallet')}</button></div>` : ''}
       ${!(w.ageDays >= 30 || w.dexTrades >= 1 || w.premium) ? `<div class="inline-note gold">${I('clock')}${t('ageRequired')}</div>` : ''}
-      <div class="panel">${summaryRow(t('requested'), n(gross, 2) + ' RIFT')}${summaryRow(t('serviceFee') + ' · 5%', '-' + n(fee, 2) + ' RIFT')}${summaryRow(t('total'), n(net, 2) + ' RIFT', true)}${btn(t('confirmWithdrawal'), 'confirm-withdraw', { icon: 'upload', extraClass: 'wide', extra: 'style="margin-top:12px"', disabled: gross < D.withdrawMinimum })}<p class="muted tiny center" style="margin-top:8px">${t('reviewDetails')}</p></div>
-      ${sectionTitle('recentWithdrawals')}<div class="panel">${s.withdrawal.items.map((x) => `<div class="list-row">${B(x.status === 'paid' ? 'check' : 'clock', x.status === 'paid' ? 'greenbox' : 'goldbox')}<div class="spacer"><h3>${n(x.amount, 2)} RIFT</h3><p class="muted small">${T.fmtDate(x.createdAt)} · ${shortAddr(x.address)}</p></div><span class="pill status small">${t(x.status === 'paid' ? 'completed' : x.status)}</span></div>`).join('') || empty('noWithdrawals', 'clock')}</div>`;
+      <div class="panel">${summaryRow(t('requested'), n(gross, 2) + ' COIN')}${summaryRow(t('serviceFee') + ' · 5%', '-' + n(fee, 2) + ' COIN')}${summaryRow(t('total'), n(net, 2) + ' COIN', true)}${btn(t('confirmWithdrawal'), 'confirm-withdraw', { icon: 'upload', extraClass: 'wide', extra: 'style="margin-top:12px"', disabled: gross < D.withdrawMinimum })}<p class="muted tiny center" style="margin-top:8px">${t('reviewDetails')}</p></div>
+      ${sectionTitle('recentWithdrawals')}<div class="panel">${s.withdrawal.items.map((x) => `<div class="list-row">${B(x.status === 'paid' ? 'check' : 'clock', x.status === 'paid' ? 'greenbox' : 'goldbox')}<div class="spacer"><h3>${n(x.amount, 2)} COIN</h3><p class="muted small">${T.fmtDate(x.createdAt)} · ${shortAddr(x.address)}</p></div><span class="pill status small">${t(x.status === 'paid' ? 'completed' : x.status)}</span></div>`).join('') || empty('noWithdrawals', 'clock')}</div>`;
   }
   function round2(v) { return Number(Number(v || 0).toFixed(2)); }
   function settings() {
@@ -420,7 +420,7 @@
       ${tabs === 'overview' ? `<div class="stats three">${statBox('users', s.adminUsers?.length ?? (s.friends.refs.length + 1))}${statBox('withdrawals', pending.length)}${statBox('liability', n(s.mining.balance, 0))}</div>
         <div class="inline-note">${I('info')}${t('raRiskNotice')}</div>
         <section class="panel"><h3>${t('raTreasury')}</h3><p class="muted small">${t('raSignerReady')}</p>${btn(t('raLock'), 'admin-logout', { cls: 'secondary', icon: 'lock', extraClass: 'wide', extra: 'style="margin-top:10px"' })}</section>` : ''}
-      ${tabs === 'withdrawals' ? `<section class="panel">${pending.map((w) => `<div class="panel" style="border-color:rgba(255,199,90,.25)"><div class="between"><div><h3>${n(w.amount, 2)} RIFT</h3><small class="muted">${esc(w.name)} · ${shortAddr(w.address)}</small></div><span class="pill small">${t(w.status)}</span></div>
+      ${tabs === 'withdrawals' ? `<section class="panel">${pending.map((w) => `<div class="panel" style="border-color:rgba(255,199,90,.25)"><div class="between"><div><h3>${n(w.amount, 2)} COIN</h3><small class="muted">${esc(w.name)} · ${shortAddr(w.address)}</small></div><span class="pill small">${t(w.status)}</span></div>
         <div class="between small" style="margin:8px 0"><span class="muted">${t('raGross')} ${n(w.gross, 0)} · ${t('raNet')} ${n(w.net, 0)}</span><b class="${w.risk > 20 ? 'red' : 'green'}">${t('raRisk')}: ${w.risk}</b></div>
         <div class="three-cols">${btn(t('approve'), 'admin-decision:' + w.id + ':approve', { cls: 'primary' })}${btn(t('raHold'), 'admin-decision:' + w.id + ':hold', { cls: 'secondary' })}${btn(t('reject'), 'admin-decision:' + w.id + ':reject', { cls: 'danger' })}</div>
         ${global.BACKEND?.remote && w.status === 'approved' ? btn('Tandai dibayar · TX hash', 'admin-mark-paid:' + w.id, { cls: 'secondary', extraClass: 'wide', extra: 'style="margin-top:7px"' }) : ''}</div>`).join('') || empty('noWithdrawals', 'clock')}</section>` : ''}
@@ -437,8 +437,8 @@
     crateDetails: (kind) => {
       const c = D.crates[kind], s = S();
       const used = s.ledger.filter((x) => x.kind === 'crate_purchase' && x.metaKind === kind && x.created_ms > now() - 86400000).length;
-      return { title: c.name, className: 'crate-detail-sheet', html: `<div class="row"><img src="${asset(c.image)}" alt="" width="80" height="80"><div><p class="muted small">${t('crateSubtitle')}</p><h2>${t(c.name)}</h2><p class="gold bold small">${n(c.price, 0)} RIFT</p></div></div>
-        <p class="muted small" style="margin:10px 0">${t(c.desc)}</p>${summaryRow(t('randomModules', { count: c.count }), c.count + 'x')}${summaryRow(t('dailyLimit'), used + ' / ' + c.limit)}${c.guaranteed ? summaryRow(t('guaranteed', { tier: t(D.tiers[c.guaranteed]) }), '✓') : ''}${summaryRow(t('total'), n(c.price, 0) + ' RIFT', true)}
+      return { title: c.name, className: 'crate-detail-sheet', html: `<div class="row"><img src="${asset(c.image)}" alt="" width="80" height="80"><div><p class="muted small">${t('crateSubtitle')}</p><h2>${t(c.name)}</h2><p class="gold bold small">${n(c.price, 0)} COIN</p></div></div>
+        <p class="muted small" style="margin:10px 0">${t(c.desc)}</p>${summaryRow(t('randomModules', { count: c.count }), c.count + 'x')}${summaryRow(t('dailyLimit'), used + ' / ' + c.limit)}${c.guaranteed ? summaryRow(t('guaranteed', { tier: t(D.tiers[c.guaranteed]) }), '✓') : ''}${summaryRow(t('total'), n(c.price, 0) + ' COIN', true)}
         <div class="inline-note" style="margin-top:10px">${I('info')}${t('crateBundleOddsNote')}</div>
         <div class="two-cols" style="margin-top:11px">${btn(t('cancel'), 'close', { cls: 'secondary' })}${btn(t('crateConfirmOpen'), 'open-crate:' + kind, { disabled: s.mining.balance < c.price || used >= c.limit })}</div>` };
     },
@@ -448,21 +448,21 @@
       if (!q) return null;
       const stocks = [1, 2, 3, 4].map((tp) => ({ tp, have: E.partCount(tp, q.tier) }));
       const can = stocks.every((x) => x.have >= q.perType) && S().mining.balance >= q.cost;
-      return { title: 'upgrade', className: 'floor-upgrade-sheet', html: summaryRow(t('floor'), '#' + f.floor) + summaryRow(t('floorRank'), f.rank + '★ → ' + q.rank + '★') + summaryRow(t('production'), n(f.income, 0) + ' → ' + n(q.income, 0) + ' RIFT/h') + summaryRow(t('total'), n(q.cost, 0) + ' RIFT', true) + `<h3 style="margin-top:11px">${t('upgradeMaterials', { class: t('moduleClass' + (q.tier + 1)) })}</h3><p class="muted small">${t('upgradePartsTotal', { count: q.totalParts, perType: q.perType })}</p><div class="floor-upgrade-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:9px">${stocks.map((x) => `<div class="floor-upgrade-part ${x.have >= q.perType ? 'green' : 'gold'}" style="text-align:center">${partImg(x.tp)}<small>${t(D.partNames[x.tp])}</small><b>${x.have}/${q.perType}</b></div>`).join('')}</div>`, confirm: 'confirm-upgrade:' + floorNo, confirmDisabled: !can };
+      return { title: 'upgrade', className: 'floor-upgrade-sheet', html: summaryRow(t('floor'), '#' + f.floor) + summaryRow(t('floorRank'), f.rank + '★ → ' + q.rank + '★') + summaryRow(t('production'), n(f.income, 0) + ' → ' + n(q.income, 0) + ' COIN/h') + summaryRow(t('total'), n(q.cost, 0) + ' COIN', true) + `<h3 style="margin-top:11px">${t('upgradeMaterials', { class: t('moduleClass' + (q.tier + 1)) })}</h3><p class="muted small">${t('upgradePartsTotal', { count: q.totalParts, perType: q.perType })}</p><div class="floor-upgrade-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:9px">${stocks.map((x) => `<div class="floor-upgrade-part ${x.have >= q.perType ? 'green' : 'gold'}" style="text-align:center">${partImg(x.tp)}<small>${t(D.partNames[x.tp])}</small><b>${x.have}/${q.perType}</b></div>`).join('')}</div>`, confirm: 'confirm-upgrade:' + floorNo, confirmDisabled: !can };
     },
     part: (type, tier) => ({ title: D.partNames[type], html: `<div class="center">${partImg(type)}<h3>${t(D.partNames[type])} · ${t(D.tiers[tier])}</h3></div>${summaryRow(t('class'), t('moduleClass' + (tier + 1)))}${summaryRow(t('yourInventory'), E.partCount(type, tier))}` }),
     reviewStake: (days, amount) => {
       const plan = D.stakingPlans.find((p) => p.days === days);
-      return { title: 'reviewStake', html: summaryRow(t('amount'), n(amount, 2) + ' RIFT') + summaryRow(t('duration'), days + ' ' + t('days')) + summaryRow(t('estimatedReward'), '+' + n(amount * plan.percent / 100, 2) + ' RIFT') + summaryRow(t('totalMaturity'), n(amount * (1 + plan.percent / 100), 2) + ' RIFT', true) + `<p class="muted small" style="margin-top:10px">${t('lockedUntil')}</p>`, confirm: 'confirm-stake:' + days + ':' + amount };
+      return { title: 'reviewStake', html: summaryRow(t('amount'), n(amount, 2) + ' COIN') + summaryRow(t('duration'), days + ' ' + t('days')) + summaryRow(t('estimatedReward'), '+' + n(amount * plan.percent / 100, 2) + ' COIN') + summaryRow(t('totalMaturity'), n(amount * (1 + plan.percent / 100), 2) + ' COIN', true) + `<p class="muted small" style="margin-top:10px">${t('lockedUntil')}</p>`, confirm: 'confirm-stake:' + days + ':' + amount };
     },
     confirmWithdraw: () => {
       const ui = global.APP.ui, gross = Number(ui.withdrawAmount) || 0;
-      return { title: 'confirmWithdrawal', html: summaryRow(t('requested'), n(gross, 2) + ' RIFT') + summaryRow(t('serviceFee') + ' 5%', '-' + n(gross * 0.05, 2)) + summaryRow(t('total'), n(gross * 0.95, 2) + ' RIFT', true) + `<p class="muted small" style="margin-top:10px">${t('reviewDetails')}</p>`, confirm: 'confirm-withdraw-final' };
+      return { title: 'confirmWithdrawal', html: summaryRow(t('requested'), n(gross, 2) + ' COIN') + summaryRow(t('serviceFee') + ' 5%', '-' + n(gross * 0.05, 2)) + summaryRow(t('total'), n(gross * 0.95, 2) + ' COIN', true) + `<p class="muted small" style="margin-top:10px">${t('reviewDetails')}</p>`, confirm: 'confirm-withdraw-final' };
     },
     levelDetail: (value) => {
       const x = D.levels[value - 1]; if (!x) return null;
       const league = D.leagueOf(value);
-      return { title: 'levelPreview', html: `<div class="level-preview center">${medal(league.key, 60)}<h3>${t(league.key)} · ${t('level')} ${value}</h3></div>${summaryRow(t('walletHold'), n(x.hold, 0) + ' RIFT')}${summaryRow(t('daily'), n(x.daily, 0) + ' RIFT')}${summaryRow(t('hourly'), n(x.daily / 24, 2) + ' RIFT')}${summaryRow(t('multiplier'), '×' + n(x.daily / D.baseDaily, 2))}` };
+      return { title: 'levelPreview', html: `<div class="level-preview center">${medal(league.key, 60)}<h3>${t(league.key)} · ${t('level')} ${value}</h3></div>${summaryRow(t('walletHold'), n(x.hold, 0) + ' COIN')}${summaryRow(t('daily'), n(x.daily, 0) + ' COIN')}${summaryRow(t('hourly'), n(x.daily / 24, 2) + ' COIN')}${summaryRow(t('multiplier'), '×' + n(x.daily / D.baseDaily, 2))}` };
     },
     commission: (refId) => {
       const list = refId && refId !== 'all' ? S().commissions.filter((x) => x.from === refId) : S().commissions;
@@ -470,7 +470,7 @@
     },
     taskDetail: (id) => {
       const m = D.missions.find((x) => x.id === id);
-      return { title: m.title, html: `<p class="muted">${t(m.desc)}</p>${summaryRow(t('reward'), '+' + n(m.reward, 0) + ' RIFT')}` };
+      return { title: m.title, html: `<p class="muted">${t(m.desc)}</p>${summaryRow(t('reward'), '+' + n(m.reward, 0) + ' COIN')}` };
     }
   };
 

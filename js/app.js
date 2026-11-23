@@ -1,4 +1,4 @@
-/* Rifty Mining - application controller */
+/* Mario Bros: Coin Quest - application controller */
 (function (global) {
   'use strict';
   const D = global.DATA, E = global.ENGINE, U = global.UI, T = global.I18N;
@@ -21,8 +21,8 @@
   /* ---------- small helpers ---------- */
   const haptic = (kind = 'impact') => { try { tg?.HapticFeedback?.impactOccurred(kind === 'success' ? 'medium' : 'light'); } catch {} };
   const brand = (s) => String(s == null ? '' : s)
-    .replace(/Rifty Mining/g, 'Mario Bros: Coin Quest')
-    .replace(/Rifty/g, 'Mario Bros')
+    .replace(/Mario Bros: Coin Quest/g, 'Mario Bros: Coin Quest')
+    .replace(/Mario Bros/g, 'Mario Bros')
     .replace(/\bRIFT\b/g, 'COIN')
     .replace(/\bRift\b/g, 'Coin');
   function coinPop(text) {
@@ -265,7 +265,7 @@
       const rows = [['date', 'kind', 'amount', 'balance']].concat(E.state().ledger.map((x) => [new Date(x.created_ms).toISOString(), x.kind, x.amount, x.balance_after]));
       const csv = rows.map((r) => r.join(',')).join('\n');
       const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-      const link = document.createElement('a'); link.href = url; link.download = 'rifty-history.csv'; link.click();
+      const link = document.createElement('a'); link.href = url; link.download = 'mario-history.csv'; link.click();
       URL.revokeObjectURL(url);
       return;
     }
@@ -425,7 +425,7 @@
 
   /* ---------- boot ---------- */
   function launchPage() {
-    root.innerHTML = `<main class="launch-page"><section class="launch-card"><img class="launch-logo" src="${U.asset('logo')}" alt=""><span class="launch-eyebrow">TELEGRAM MINI APP</span><h1>Rifty Mining</h1><p class="muted">${t('loginRequired')}</p><a class="btn btn-primary wide" href="https://t.me/${D.botName}?startapp=app"><span>${t('openTelegram')}</span></a><small class="muted">@${D.botName}</small></section></main>`;
+    root.innerHTML = `<main class="launch-page"><section class="launch-card"><img class="launch-logo" src="${U.asset('logo')}" alt=""><span class="launch-eyebrow">TELEGRAM MINI APP</span><h1>Mario Bros: Coin Quest</h1><p class="muted">${t('loginRequired')}</p><a class="btn btn-primary wide" href="https://t.me/${D.botName}?startapp=app"><span>${t('openTelegram')}</span></a><small class="muted">@${D.botName}</small></section></main>`;
   }
 
   async function boot() {
@@ -496,7 +496,7 @@
       else E.tick();
       updateCalculations();
     });
-    global.addEventListener('rifty:wallet', async (e) => {
+    global.addEventListener('mario:wallet', async (e) => {
       if (!BACKEND.ready || !e.detail?.account?.address) return;
       try {
         await BACKEND.api('/api/wallet/connect', { address: e.detail.account.address });
@@ -507,5 +507,5 @@
   }
 
   global.APP = { ui, go, back, render, modal, closeModal, promptModal, toast, act, handle, boot, route, query, busy };
-  boot().catch((e) => { console.error(e); root.innerHTML = `<div class="full-error"><h1>Rifty Mining</h1><p class="muted">${e.message}</p></div>`; });
+  boot().catch((e) => { console.error(e); root.innerHTML = `<div class="full-error"><h1>Mario Bros: Coin Quest</h1><p class="muted">${e.message}</p></div>`; });
 })(window);

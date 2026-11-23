@@ -23,7 +23,7 @@ function json(res, status, body) {
     'Content-Length': Buffer.byteLength(data),
     'Cache-Control': 'no-store',
     'Access-Control-Allow-Origin': config.origin(),
-    'Access-Control-Allow-Headers': 'Content-Type, X-Rifty-Token, Authorization',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Mario-Token, Authorization',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
   });
   res.end(data);
@@ -47,7 +47,7 @@ function body(req) {
 }
 
 function session(req) {
-  const header = req.headers['x-rifty-token'] || req.headers.authorization || '';
+  const header = req.headers['x-mario-token'] || req.headers.authorization || '';
   const token = String(header).replace(/^Bearer\s+/i, '').trim();
   return store.verify(token) ? { token, ...store.verify(token) } : null;
 }
@@ -129,7 +129,7 @@ const server = http.createServer(async (req, res) => {
     }
     if (p === '/api/auth/demo' && req.method === 'POST') {
       if (!config.demoMode) return bad(res, 'err_admin_required', 403);
-      const user = { id: '7641002831', first_name: 'Rift Explorer', username: 'riftexplorer', photo_url: '', is_premium: false, language_code: 'en' };
+      const user = { id: '7641002831', first_name: 'Mario Explorer', username: 'marioxplorer', photo_url: '', is_premium: false, language_code: 'en' };
       const state = await store.withLock(user.id, () => { const s = host.bootstrap(user.id, user); store.upsertUser(user, s); return s; });
       return ok(res, { token: store.issue(user.id, config.isAdmin(user.id)), user, state,
         isAdmin: config.isAdmin(user.id), config: { jettonMaster: config.jettonMaster, treasury: config.treasury, bot: config.botName } });
@@ -274,7 +274,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(config.port, config.host, () => {
-  console.log(`Rifty backend listening on http://${config.host}:${config.port}`);
+  console.log(`Mario Bros backend listening on http://${config.host}:${config.port}`);
   console.log(`Telegram verification: ${config.botToken ? 'ENABLED' : 'DISABLED (set RIFTY_BOT_TOKEN)'}`);
   console.log(`Demo mode: ${config.demoMode ? 'ON' : 'OFF'}`);
   console.log(`Admin IDs: ${config.adminIds.join(', ') || '(none)'}`);

@@ -1,11 +1,11 @@
-/* Rifty Mining - local state engine. Mirrors the reference app's server-side operations
+/* Mario Bros: Coin Quest - local state engine. Mirrors the reference app's server-side operations
    with a fully offline, persistent simulation so every feature is usable. */
 (function (global) {
   'use strict';
   const D = global.DATA;
   const DAY = 86400000;
   const HOUR = 3600000;
-  const KEY = 'rifty_state_v2';
+  const KEY = 'mario_state_v2';
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const round = (v, d = 4) => Number(Number(v || 0).toFixed(d));
@@ -22,7 +22,7 @@
 
   function defaultState(tgUser) {
     const now = Date.now();
-    const user = tgUser || { id: '7641002831', first_name: 'Rift Explorer', username: 'riftexplorer',
+    const user = tgUser || { id: '7641002831', first_name: 'Mario Explorer', username: 'marioxplorer',
       photo_url: '', premium: false, language_code: 'en' };
     const floors = Array.from({ length: D.maxFloors }, (_, i) => {
       const floor = i + 1;
@@ -387,7 +387,7 @@
       return fail('err_invalid_parameters');
     },
     connectWallet(address) {
-      const addr = address || ('UQ' + Math.random().toString(36).slice(2, 12) + 'RIFT');
+      const addr = address || ('UQ' + Math.random().toString(36).slice(2, 12) + 'COIN');
       S.wallet.address = addr;
       S.wallet.rawAddress = addr;
       S.wallet.ton = round(12 + Math.random() * 20, 4);
@@ -527,7 +527,7 @@
         case 'credit': credit(Number(value) || 10000, 'sandbox_credit'); break;
         case 'hold':
           S.wallet.hold = Number(value) || 2500; S.wallet.holdFresh = true;
-          S.wallet.address ||= 'UQDEMO1234567890RIFT'; reconcile(); break;
+          S.wallet.address ||= 'UQDEMO1234567890MARIO'; reconcile(); break;
         case 'parts':
           [1, 2, 3, 4].forEach((tp) => addPart(tp, 0, 10)); break;
         case 'advance': S.timeOffset += (Number(value) || 1) * DAY; reconcile(); break;
