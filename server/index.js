@@ -108,7 +108,7 @@ const server = http.createServer(async (req, res) => {
       return json(res, 200, {
         url: origin + '/',
         name: config.appName,
-        iconUrl: origin + '/assets/logo.webp',
+        iconUrl: origin + '/assets/mario-logo.svg',
         termsOfUseUrl: origin + '/#terms',
         privacyPolicyUrl: origin + '/#privacy'
       });
