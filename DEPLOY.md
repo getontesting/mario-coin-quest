@@ -4,7 +4,7 @@
 
 - **Kode sumber:** https://github.com/getontesting/mario-coin-quest
 - **Live (GitHub Pages, mode demo/lokal):** https://getontesting.github.io/mario-coin-quest/
-- **Render:** Web Service sudah dikonfigurasi (Node, plan Free, build `npm install`, start `npm start`, 5 env var) tetapi **belum selesai** karena Render sekarang meminta verifikasi kartu (otorisasi sementara $1, tidak ditagih). Buka tab Render, isi kartu, lalu klik **Deploy web service** untuk mengaktifkan backend penuh di `https://mario-coin-quest.onrender.com`.
+- **Render (BACKEND PENUH, LIVE):** https://mario-coin-quest.onrender.com — deploy berhasil (Node, plan Free, build `npm install`, start `npm start`, 5 env var). Kartu sudah diverifikasi (otorisasi sementara $1, tidak ditagih). Cek `/health`. Untuk mengaktifkan Telegram/TON nyata, tambahkan `RIFTY_BOT_TOKEN`, `RIFTY_ADMIN_IDS`, `RIFTY_TREASURY`, `RIFTY_JETTON_MASTER`, `RIFTY_TONAPI_KEY` di Environment → lalu `RIFTY_DEMO_MODE=false`.
 
 ## Rekomendasi: Render (gratis, backend Node lengkap)
 
