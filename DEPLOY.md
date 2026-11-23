@@ -1,5 +1,11 @@
 # Deploy gratis — Mario Bros: Coin Quest
 
+## Status deploy saat ini
+
+- **Kode sumber:** https://github.com/getontesting/mario-coin-quest
+- **Live (GitHub Pages, mode demo/lokal):** https://getontesting.github.io/mario-coin-quest/
+- **Render:** Web Service sudah dikonfigurasi (Node, plan Free, build `npm install`, start `npm start`, 5 env var) tetapi **belum selesai** karena Render sekarang meminta verifikasi kartu (otorisasi sementara $1, tidak ditagih). Buka tab Render, isi kartu, lalu klik **Deploy web service** untuk mengaktifkan backend penuh di `https://mario-coin-quest.onrender.com`.
+
 ## Rekomendasi: Render (gratis, backend Node lengkap)
 
 Render menyediakan Web Service gratis dengan HTTPS otomatis — cocok untuk Telegram Mini App karena
