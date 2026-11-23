@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: mario-coin-quest
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: PORT
+        value: "10000"
+      - key: HOST
+        value: "0.0.0.0"
+      - key: RIFTY_PUBLIC_URL
+        sync: false
+      - key: RIFTY_SESSION_SECRET
+        generateValue: true
+      - key: RIFTY_BOT_TOKEN
+        sync: false
+      - key: RIFTY_BOT_NAME
+        value: "mariocoinbot"
+      - key: RIFTY_ADMIN_IDS
+        sync: false
+      - key: RIFTY_DEMO_MODE
+        value: "false"
+      - key: RIFTY_TONAPI_KEY
+        sync: false
+      - key: RIFTY_TONAPI_BASE
+        value: "https://tonapi.io/v2"
+      - key: RIFTY_CHAIN
+        value: "-239"
+      - key: RIFTY_JETTON_MASTER
+        sync: false
+      - key: RIFTY_TREASURY
+        sync: false

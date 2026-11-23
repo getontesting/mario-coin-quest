@@ -1,0 +1,13 @@
+{
+  "name": "rifty-miniapp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Rifty Mining Telegram Mini App with a real Node backend, Telegram auth and TON Connect",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

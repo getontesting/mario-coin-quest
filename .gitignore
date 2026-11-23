@@ -1,0 +1,8 @@
+node_modules/
+.env
+data/
+*.log
+.DS_Store
+_ref_*
+*.tmp
+mario-coin-quest.zip
